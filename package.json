@@ -1,5 +1,5 @@
 {
-  "name": "react-native-blemulator",
+  "name": "@prevayl/react-native-blemulator",
   "title": "React Native BLEmulator",
   "version": "0.0.1",
   "description": "BLE simulator for react-native-ble-plx",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Polidea/react-native-blemulator.git",
+    "url": "git+https://github.com/Prevayl/react-native-blemulator.git",
     "baseUrl": "https://github.com/Polidea/react-native-blemulator"
   },
   "keywords": [
@@ -26,13 +26,14 @@
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
+    "logkitty": "^0.7.1",
     "react": "^16.8.1",
-    "react-native": ">=0.60.0-rc.0 <1.0.x",
-    "logkitty": "^0.7.1"
+    "react-native": ">=0.60.0-rc.0 <1.0.x"
   },
   "devDependencies": {
     "@types/react": "^16.9.34",
     "@types/react-native": "^0.62.4",
+    "conventional-changelog-conventionalcommits": "^4.5.0",
     "react": "^16.9.0",
     "react-native": "^0.62.2",
     "react-native-typescript-transformer": "^1.2.13",

@@ -1,0 +1,73 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    name: Publish Package
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - uses: actions/checkout@v2
+
+      # Set up node and the npm registry and scope
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+          scope: "@prevayl"
+
+      # Restore node modules cache
+      - name: Run restore cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+
+      # Install node modules
+      - run: yarn
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+
+      # Run the linting tools
+      - run: yarn tsc
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+
+      # Run the auto versioning tool
+      - name: Run generate changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          git-message: "chore(release): {version} [skip ci]"
+          config-file-path: "changelog.config.js"
+
+      # Push release to GitHub
+      - name: Run create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+      # Publish the npm package
+      # - run: yarn publish
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      #     NODE_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      # Push changelog and tag to main
+      - name: Run git push
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git push --follow-tags origin master
