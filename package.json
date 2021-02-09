@@ -1,7 +1,7 @@
 {
   "name": "@prevayl/react-native-blemulator",
   "title": "React Native BLEmulator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "BLE simulator for react-native-ble-plx",
   "main": "index.ts",
   "scripts": {
